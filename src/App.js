@@ -1,24 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useContext, useEffect, useRef } from 'react';
+import GlobalContext from './Context/GlobalContext';
+import { getMonth } from './util';
+
+// components
+import CalenderHeader from './components/CalenderHeader';
+import Month from './components/Month';
+import dayjs from 'dayjs';
 
 function App() {
+  const [currentMonth, setCurrentMonth] = useState(getMonth());
+  const { monthIndex } = useContext(GlobalContext);
+  
+  const todayRef = useRef(null);
+
+  useEffect(() => {
+    setCurrentMonth(getMonth(monthIndex));
+  }, [monthIndex]);
+
+  const scrollToToday = () => {
+      if (todayRef.current) {
+          todayRef.current.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+          });
+      }
+  };
+
+
+  useEffect(() => {
+      if (monthIndex === dayjs().month()) {
+          setTimeout(scrollToToday, 50); 
+      }
+  }, [monthIndex]);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  <div
+    style={{
+      height: '100vh',
+      overflowY: 'auto',
+      msOverflowStyle: 'none',
+      scrollbarWidth: 'none',
+      '&::WebkitScrollbar': {
+      display: 'none'
+    }
+  }}>
+    <CalenderHeader onTodayClick={scrollToToday} />
+    <Month month={currentMonth} ref={todayRef} />
+  </div>
+
   );
 }
 
