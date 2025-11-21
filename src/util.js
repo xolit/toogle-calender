@@ -1,8 +1,6 @@
 import dayjs from "dayjs";
 
-export function getMonth(monthIndex = dayjs().month()) {
-    const year = dayjs().year();
-    
+export function getMonth(monthIndex = dayjs().month(), year = dayjs().year()) {
     const firstOfMonth = dayjs(new Date(year, monthIndex, 1));
     const startDay = firstOfMonth.subtract(firstOfMonth.day(), "day");
 

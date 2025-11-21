@@ -8,13 +8,13 @@ import Month from './components/Month';
 import dayjs from 'dayjs';
 
 function App() {
-  const [currentMonth, setCurrentMonth] = useState(getMonth());
-  const { monthIndex } = useContext(GlobalContext);
+  const { monthIndex, yearIndex } = useContext(GlobalContext);
+  const [currentMonth, setCurrentMonth] = useState(getMonth(monthIndex, yearIndex));
   
   const todayRef = useRef(null);
 
   useEffect(() => {
-    setCurrentMonth(getMonth(monthIndex));
+    setCurrentMonth(getMonth(monthIndex, yearIndex));
   }, [monthIndex]);
 
   const scrollToToday = () => {
@@ -28,10 +28,10 @@ function App() {
 
 
   useEffect(() => {
-      if (monthIndex === dayjs().month()) {
-          setTimeout(scrollToToday, 50); 
-      }
-  }, [monthIndex]);
+    if (monthIndex === dayjs().month() && yearIndex === dayjs().year()) {
+      setTimeout(scrollToToday, 50);
+    }
+  }, [monthIndex, yearIndex]);
 
 
   return (
